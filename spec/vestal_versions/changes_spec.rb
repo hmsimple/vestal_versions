@@ -92,7 +92,7 @@ describe VestalVersions::Changes do
     it 'has string keys' do
       1.upto(version) do |i|
         1.upto(version) do |j|
-          user.changes_between(i, j).keys.each{ |key| key.should be_a(String) }
+          user.changes_between(i, j).keys.each{ |key| key.should be_a(Symbol) }
         end
       end
     end
@@ -110,6 +110,8 @@ describe VestalVersions::Changes do
     end
 
     it 'is empty between identical versions' do
+      p user.versions.between(1, version).reject(&:initial?)
+
       user.changes_between(1, version).should be_empty
       user.changes_between(version, 1).should be_empty
     end
