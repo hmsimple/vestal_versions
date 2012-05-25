@@ -9,28 +9,30 @@ module VestalVersions
     # given by the arguments. If the +from+ value represents a version before that of the +to+
     # value, the array will be ordered from earliest to latest. The reverse is also true.
     def between(from, to)
-      from_number, to_number = number_at(from), number_at(to)
-      return [] if from_number.nil? || to_number.nil?
+      from_number = number_at(from) || from || 0
+      to_number = number_at(to) || to || 0
+      # return [] if from_number.nil? || to_number.nil?
 
       condition = (from_number == to_number) ? to_number : Range.new(*[from_number, to_number].sort)
-      all(
-        :conditions => {:number => condition},
-        :order => "#{table_name}.#{connection.quote_column_name('number')} #{(from_number > to_number) ? 'DESC' : 'ASC'}"
-      )
+
+      where(:number => condition).
+      order("#{table_name}.#{connection.quote_column_name('number')} #{(from_number > to_number) ? 'DESC' : 'ASC'}")
     end
 
     # Returns all version records created before the version associated with the given value.
     def before(value)
-      return [] if (number = number_at(value)).nil?
-      all(:conditions => "#{table_name}.#{connection.quote_column_name('number')} < #{number}")
+      # return [] if (number = number_at(value)).nil?
+      number = number_at(value) || 0
+      where("#{table_name}.#{connection.quote_column_name('number')} < ?", number)
     end
 
     # Returns all version records created after the version associated with the given value.
     #
     # This is useful for dissociating records during use of the +reset_to!+ method.
     def after(value)
-      return [] if (number = number_at(value)).nil?
-      all(:conditions => "#{table_name}.#{connection.quote_column_name('number')} > #{number}")
+      # return [] if (number = number_at(value)).nil?
+      number = number_at(value) || 999999999999999999999999
+      where("#{table_name}.#{connection.quote_column_name('number')} > ?", number)
     end
 
     # Returns a single version associated with the given value. The following formats are valid:
@@ -49,7 +51,7 @@ module VestalVersions
     #   untouched.
     def at(value)
       case value
-        when Date, Time then last(:conditions => ["#{table_name}.created_at <= ?", value.to_time])
+        when Date, Time then where("#{table_name}.created_at <= ?", value.to_time).last
         when Numeric then find_by_number(value.floor)
         when String then find_by_tag(value)
         when Symbol then respond_to?(value) ? send(value) : nil

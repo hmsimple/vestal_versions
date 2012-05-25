@@ -110,8 +110,6 @@ describe VestalVersions::Changes do
     end
 
     it 'is empty between identical versions' do
-      p user.versions.between(1, version).reject(&:initial?)
-
       user.changes_between(1, version).should be_empty
       user.changes_between(version, 1).should be_empty
     end

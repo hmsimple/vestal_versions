@@ -18,7 +18,7 @@ module VestalVersions
     # version tag or a version object itself.
     def changes_between(from, to)
       from_number, to_number = versions.number_at(from), versions.number_at(to)
-      return {} if from_number == to_number
+      return {} if from_number.nil? || to_number.nil? || from_number == to_number
       chain = versions.between(from_number, to_number).reject(&:initial?)
       return {} if chain.empty?
 

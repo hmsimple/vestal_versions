@@ -14,7 +14,7 @@ module VestalVersions
     # documentation for more details.
     def reset_to!(value)
       if saved = skip_version{ revert_to!(value) }
-        versions.after(value).each(&:delete)
+        versions.after(value).destroy_all
         reset_version
       end
       saved

@@ -23,10 +23,10 @@ describe VestalVersions::Versions do
   it 'is searchable between two valid version values' do
     times.keys.each do |number|
       times.values.each do |time|
-        subject.versions.between(number, number).should be_a(Array)
-        subject.versions.between(number, time).should be_a(Array)
-        subject.versions.between(time, number).should be_a(Array)
-        subject.versions.between(time, time).should be_a(Array)
+        subject.versions.between(number, number).should be_a(ActiveRecord::Relation)
+        subject.versions.between(number, time).should be_a(ActiveRecord::Relation)
+        subject.versions.between(time, number).should be_a(ActiveRecord::Relation)
+        subject.versions.between(time, time).should be_a(ActiveRecord::Relation)
         subject.versions.between(number, number).should_not be_empty
         subject.versions.between(number, time).should_not be_empty
         subject.versions.between(time, number).should_not be_empty
@@ -37,10 +37,10 @@ describe VestalVersions::Versions do
 
   it 'returns an empty array when searching between a valid and an invalid version value' do
     times.each do |number, time|
-      subject.versions.between(number, nil).should == []
-      subject.versions.between(time, nil).should == []
-      subject.versions.between(nil, number).should == []
-      subject.versions.between(nil, time).should == []
+      subject.versions.between(number, nil).should be_a(ActiveRecord::Relation)
+      subject.versions.between(time, nil).should be_a(ActiveRecord::Relation)
+      subject.versions.between(nil, number).should be_a(ActiveRecord::Relation)
+      subject.versions.between(nil, time).should be_a(ActiveRecord::Relation)
     end
   end
 

@@ -1,3 +1,9 @@
+Updates in this fork:
+
+* Use ActiveRecord::Relation instead of Arrays when searching Versions.
+* If you pass nil whens searching `before`, it assumes 0; if you pass nil when searching `after`, it assumes a very large number (999999999999999999999999). So the result should be empty either way, but instead of an empty array you get an empty ActiveRecord::Relation.
+
+
 = vestal_versions for Rails 3
 
 Finally, DRY ActiveRecord versioning!
