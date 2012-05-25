@@ -11,7 +11,7 @@ module VestalVersions
     # Class methods on ActiveRecord::Base
     module ClassMethods
       # After the original +prepare_versioned_options+ method cleans the given options, this alias
-      # also extracts the <tt>:depedent</tt> if it set to <tt>:tracking</tt>
+      # also extracts the <tt>:dependent</tt> if it set to <tt>:tracking</tt>
       def prepare_versioned_options(options)
         result = super(options)
         if result[:dependent] == :tracking
@@ -30,7 +30,7 @@ module VestalVersions
       end
 
       def create_destroyed_version
-        create_version({:modifications => attributes, :number => last_version + 1, :tag => 'deleted'})
+        create_version({:modifications => attributes, :number => last_version + 1, :tag => 'deleted', user: updated_by})
       end
 
   end

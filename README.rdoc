@@ -2,6 +2,11 @@ Updates in this fork:
 
 * Use ActiveRecord::Relation instead of Arrays when searching Versions.
 * If you pass nil whens searching `before`, it assumes 0; if you pass nil when searching `after`, it assumes a very large number (999999999999999999999999). So the result should be empty either way, but instead of an empty array you get an empty ActiveRecord::Relation.
+* Tracks the user who deleted the record when using :dependent => :tracking
+
+Known bug:
+
+* If you compare two identical versions, the changes won't end up empty.
 
 
 = vestal_versions for Rails 3

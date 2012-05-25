@@ -2,6 +2,7 @@ require 'spec_helper'
 
 describe VestalVersions::Deletion do
   let(:name){ 'Steve Richert' }
+  let(:updated_by){ User.create(:name => 'Steve Jobs') }
   subject{ DeletedUser.create(:first_name => 'Steve', :last_name => 'Richert') }
 
   context "a deleted version's changes" do
@@ -23,6 +24,12 @@ describe VestalVersions::Deletion do
     it "creates a version with a tag 'deleted'" do
       subject.destroy
       VestalVersions::Version.last.tag.should == 'deleted'
+    end
+
+    it "tracks who deleted it" do
+      subject.updated_by = updated_by
+      subject.destroy
+      VestalVersions::Version.last.user.should == updated_by
     end
 
   end
